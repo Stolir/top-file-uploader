@@ -1,0 +1,17 @@
+<header>
+  <nav>
+    <a href="/"
+      ><img class="logo" src="/images/logo.png" alt="Storagis Logo"
+    /></a>
+    <ul>
+      <% if (user) { %>
+        <li><a href="/files/new"><img src="/icons/plus-circle.svg" alt="upload new file"></a></li>
+        <li><a href="/account/manage"><img src="/icons/profile-circle.svg" alt="Manage Account"></a></li>
+        <li><a href="/logout"><img src="/icons/log-out.svg" alt="log out"></a></li>
+      <% } else { %>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/signup">Sign up</a></li>
+      <% } %>
+    </ul>
+  </nav>
+</header>

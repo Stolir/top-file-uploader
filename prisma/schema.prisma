@@ -14,11 +14,12 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  name     String
-  email    String @unique
-  files    File[]
+  id            Int    @id @default(autoincrement())
+  username      String @unique
+  first_name    String
+  email         String @unique
+  password_hash String
+  files         File[]
 }
 
 model File {

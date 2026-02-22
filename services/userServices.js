@@ -1,10 +1,25 @@
+const { prisma } = require("../lib/prisma");
+
 // find by unique field
-const findUserByUsername = (username) => {
-  return prisma.user.findUnique({ where: { username } });
+const findUserByUsername = async (username) => {
+  return await prisma.user.findUnique({ where: { username } });
 };
 
-const findUserById = (userId) => {
-  return prisma.user.findUnique({ where: { userId } });
+const findUserById = async (userId) => {
+  return await prisma.user.findUnique({ where: { id: userId } });
 };
 
-module.exports = { findUserByUsername, findUserById };
+const findUserByEmail = async (email) => {
+  return await prisma.user.findUnique({ where: { email } });
+};
+
+const createUser = async (data) => {
+  return await prisma.user.create({ data });
+};
+
+module.exports = {
+  findUserByUsername,
+  findUserById,
+  findUserByEmail,
+  createUser,
+};

@@ -17,6 +17,10 @@ const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { prisma } = require("./lib/prisma");
 
 // Require Routes
+const indexRouter = require("./routes/indexRouter");
+const signupRouter = require("./routes/signupRouter");
+const loginRouter = require("./routes/loginRouter");
+const logoutRouter = require("./routes/logoutRouter");
 
 // Define app related
 const app = express();
@@ -38,14 +42,40 @@ app.use(
       dbRecordIdFunction: undefined,
       dbRecordIdIsSessionId: true,
     }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // One day
     },
   }),
 );
 
+app.use(passport.session());
+
 // Custom middleware
+// development only
+app.use(async (req, res, next) => {
+  console.log(req.session);
+  console.log(await req.user);
+  next();
+});
+
+app.use((req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
 
 // Use routes
+app.use("/", indexRouter);
+app.use("/signup", signupRouter);
+app.use("/login", loginRouter);
+app.use("/logout", logoutRouter);
 
 // Run app
+app.listen(PORT, (err) => {
+  if (err) {
+    throw err;
+  }
+  console.log(`Running on ${PORT}`);
+});

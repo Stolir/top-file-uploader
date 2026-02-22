@@ -8,15 +8,15 @@ const LocalStrategy = require("passport-local").Strategy;
 
 const verifyCallback = async (username, password, done) => {
   try {
-    const user = findUserByUsername(username);
+    const user = await findUserByUsername(username);
     if (!user) {
       return done(null, false, { message: "Invalid username or password" });
     }
     const isValid = validatePassword(password, user.password_hash);
     if (isValid) {
-      done(null, user);
+      return done(null, user);
     } else {
-      done(null, false);
+      return done(null, false);
     }
   } catch (err) {
     done(err);
@@ -35,7 +35,7 @@ passport.deserializeUser(async (userId, done) => {
   try {
     const user = findUserById(userId);
     if (!user) {
-      done(null, false);
+      return done(null, false);
     }
     done(null, user);
   } catch (err) {
