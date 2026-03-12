@@ -1,48 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/global.css">
-    <title><%= title %></title>
-  </head>
-  <body>
-     <%- include('partials/navbar') %>
-     <section class="form-container">
-      <h1><%= title %></h1>
-      <form action="/login" method="post" class="login">
-        <div class="errors">
-          <% errors.forEach(error => { %>
-           <p><%= error %></p>
-          <% }) %>
-        </div>
-        <div>
-          <label for="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value="<%= data?.username || '' %>"
-            required
-          />
-          <% if (validationErrors?.username) { %>
-            <span class="error"><%= validationErrors.username %></span>
-          <% } %>
-        </div>
-        <div>
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            required
-          />
-          <% if (validationErrors?.password) { %>
-            <span class="error"><%= validationErrors.password %></span>
-          <% } %>
-        </div>
-        <button type="submit">Log In</button>
-      </form>
-    </section>
-  </body>
-</html>
+<section class="form-container">
+  <h1><%= title %></h1>
+  <form action="/login" method="post" class="login">
+    <div class="errors">
+      <% errors.forEach(error => { %>
+       <p><%= error %></p>
+      <% }) %>
+    </div>
+    <div>
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        value="<%= data?.username || '' %>"
+        required
+      />
+      <% if (validationErrors?.username) { %>
+        <span class="error"><%= validationErrors.username %></span>
+      <% } %>
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+      />
+      <% if (validationErrors?.password) { %>
+        <span class="error"><%= validationErrors.password %></span>
+      <% } %>
+    </div>
+    <button type="submit">Log In</button>
+  </form>
+</section>
+

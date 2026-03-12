@@ -1,18 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/global.css">
-    <title><%= title %></title>
-  </head>
-  <body>
-    <%- include('partials/navbar') %>
-    <h1>Home Page</h1>
-    <% if (user) { %>
-     <h2>You are logged in.</h2>
-    <% } else { %>
-      <h2>You are not logged in.</h2>
-    <% } %>
-  </body>
-</html>
+<% if (user) { %>
+    <h2>You are logged in.</h2>
+  <% } else { %>
+    <h2>Log in to view your files.</h2>
+<% } %>
+

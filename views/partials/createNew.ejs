@@ -1,0 +1,12 @@
+<dialog id="createNew">
+  <button type="button" id="createNew_Folder">New Folder</button>
+  <button type="button" id="createNew_File">Upload File</button>
+</dialog>
+
+<dialog id="createFolder">
+  <form action="/folders" method="post">
+    <input type="text" placeholder="New Folder" required />
+    <button type="submit">Create</button>
+    <button type="button" class="close-dialog">Cancel</button>
+  </form>
+</dialog>
