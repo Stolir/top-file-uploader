@@ -9,6 +9,7 @@ const fs = require("fs");
 // Require express related
 const express = require("express");
 const path = require("node:path");
+const expressLayouts = require("express-ejs-layouts");
 
 // Require auth related
 const passport = require("passport");
@@ -29,6 +30,7 @@ const PORT = process.env.PORT || 3000;
 // Set express settings
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+app.use(expressLayouts);
 
 // Use middleware
 app.use(express.urlencoded({ extended: true }));
