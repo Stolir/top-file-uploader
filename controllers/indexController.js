@@ -1,7 +1,7 @@
 const { userIsLoggedIn } = require("../lib/authHelpers");
 
 const getHomePage = (req, res) => {
-  if (userIsLoggedIn) {
+  if (userIsLoggedIn(req)) {
     return res.render("dashboard", { title: "Dashboard" });
   }
   res.render("index", { title: "Home" });
