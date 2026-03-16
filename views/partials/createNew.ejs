@@ -3,9 +3,18 @@
   <button type="button" id="createNew_File">Upload File</button>
 </dialog>
 
-<dialog id="createFolder">
+<dialog id="createFolder" <%= openDialog ? "open" : '' %>>
   <form action="/folders" method="post">
-    <input type="text" placeholder="New Folder" required />
+    <% errors.forEach(error => { %>
+     <span class="error"><%= error.msg %></span>
+    <% }) %>
+    <input
+      type="text"
+      placeholder="New Folder"
+      name="name"
+      id="folder_name"
+      required
+    />
     <button type="submit">Create</button>
     <button type="button" class="close-dialog">Cancel</button>
   </form>

@@ -22,6 +22,7 @@ const indexRouter = require("./routes/indexRouter");
 const signupRouter = require("./routes/signupRouter");
 const loginRouter = require("./routes/loginRouter");
 const logoutRouter = require("./routes/logoutRouter");
+const foldersRouter = require("./routes/foldersRouter");
 
 // Define app related
 const app = express();
@@ -56,6 +57,14 @@ app.use(
 app.use(passport.session());
 
 // Custom middleware
+
+// set variables used in layout so they are never undefined
+app.use((req, res, next) => {
+  res.locals.errors = [];
+  res.locals.openDialog = false;
+  next();
+});
+
 // development only
 app.use(async (req, res, next) => {
   console.log(req.session);
@@ -73,6 +82,7 @@ app.use("/", indexRouter);
 app.use("/signup", signupRouter);
 app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
+app.use("/folders", foldersRouter);
 
 // Run app
 app.listen(PORT, (err) => {

@@ -1,6 +1,23 @@
 <% if (user) { %>
-    <h2>You are logged in.</h2>
+    <section id="dashboard">
+      <% if (files.length <= 0 && folders.length <= 0) { %>
+       You do not have any folders. Right-click to create your first!
+      <% } %>
+
+      <% if (folders.length > 0) { %>
+       <% folders.forEach(folder => { %>
+        <%- include('partials/folder', {folder}) %>
+       <% }) %>
+      <% } %>
+
+      <% if (files.length > 0) { %>
+       <% files.forEach(file => { %>
+        <%- include('partials/file', {file}) %>
+       <% }) %>
+      <% } %>
+
+    </section>
   <% } else { %>
-    <h2>Log in to view your files.</h2>
+    <section id="dashboard"><h2>Log in to view your files.</h2></section>
 <% } %>
 

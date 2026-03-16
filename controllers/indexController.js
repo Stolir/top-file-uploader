@@ -1,8 +1,17 @@
 const { userIsLoggedIn } = require("../lib/authHelpers");
+const { findFilesByUserId } = require("../services/fileServices");
+const { findFoldersByUserId } = require("../services/folderServices");
 
-const getHomePage = (req, res) => {
+const getHomePage = async (req, res) => {
   if (userIsLoggedIn(req)) {
-    return res.render("dashboard", { title: "Dashboard" });
+    const folders = await findFoldersByUserId(req.user.id);
+    const files = await findFilesByUserId(req.user.id);
+    console.log(folders);
+    return res.render("index", {
+      title: "Dashboard",
+      files,
+      folders,
+    });
   }
   res.render("index", { title: "Home" });
 };

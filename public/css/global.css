@@ -292,6 +292,8 @@ main {
 /* --------- DASHBOARD --------- */
 
 #dashboard {
+  display: flex;
+  gap: 1rem;
   width: 100%;
   height: 100%;
 }
@@ -313,3 +315,34 @@ dialog input {
   padding: 0.3rem;
 }
 /* ---------- DIALOG ----------- */
+
+/* ---------- FILES ------------ */
+
+.folder,
+.file {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  max-width: 100px;
+  max-height: 100px;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.folder img,
+.file img {
+  width: 60px;
+  height: 60px;
+}
+
+.folder:hover,
+.file:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.075);
+}
+/* ---------- FILES ------------ */

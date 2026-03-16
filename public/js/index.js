@@ -1,4 +1,5 @@
 const fileMenu = document.getElementById("fileMenu");
+const folderMenu = document.getElementById("folderMenu");
 const dashboardMenu = document.getElementById("dashboardMenu");
 
 document.addEventListener("contextmenu", function (e) {
@@ -6,12 +7,12 @@ document.addEventListener("contextmenu", function (e) {
 
   // Hide both first
   fileMenu.style.display = "none";
+  folderMenu.style.display = "none";
   dashboardMenu.style.display = "none";
 
   const dashboard = document.getElementById("dashboard");
 
   if (!dashboard || !dashboard.contains(e.target)) {
-    console.log(e.target);
     // Not in the dashboard, do nothing
     return;
   }
@@ -21,6 +22,9 @@ document.addEventListener("contextmenu", function (e) {
   if (e.target.closest(".file")) {
     // Right-click on a file
     menuToShow = fileMenu;
+  } else if (e.target.closest(".folder")) {
+    // Right-click on a folder
+    menuToShow = folderMenu;
   } else {
     // Right-click in empty dashboard space
     menuToShow = dashboardMenu;
@@ -45,6 +49,7 @@ document.addEventListener("contextmenu", function (e) {
 document.addEventListener("click", function () {
   fileMenu.style.display = "none";
   dashboardMenu.style.display = "none";
+  folderMenu.style.display = "none";
 });
 
 // Create new
