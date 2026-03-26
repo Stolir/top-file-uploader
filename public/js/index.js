@@ -61,6 +61,8 @@ document.addEventListener("click", function () {
 });
 
 // Create new
+
+// Folder
 const createFolder = document.getElementById("createFolder");
 const openCreateFolderBtn = document.querySelector("button.openCreateFolder");
 const closeCreateFolderBtn = createFolder.querySelector(".close-dialog");
@@ -73,13 +75,24 @@ closeCreateFolderBtn.addEventListener("click", () => {
   createFolder.close();
 });
 
+// File
+const createFile = document.getElementById("createFile");
+const openCreateFileBtn = document.querySelector("button.openCreateFile");
+const closeCreateFileBtn = createFile.querySelector(".close-dialog");
+
+openCreateFileBtn.addEventListener("click", () => {
+  createFile.show();
+});
+
+closeCreateFileBtn.addEventListener("click", () => {
+  createFile.close();
+});
+
 // Folder context menu functionality
 // Delete
 const folderDeleteBtn = folderMenu.querySelector(".delete");
-console.log(folderDeleteBtn);
 
 folderDeleteBtn.addEventListener("click", async () => {
-  console.log(selectedFolder);
   if (!selectedFolder) {
     return;
   }

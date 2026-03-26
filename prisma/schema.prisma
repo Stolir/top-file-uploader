@@ -45,7 +45,9 @@ model File {
   name      String
   size      Int
   createdAt DateTime @default(now())
-  path      String   @unique
+  url       String   @unique
+  publicId  String
+  mimeType  String
   type      String
   folder    Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId  Int?

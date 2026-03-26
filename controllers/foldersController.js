@@ -29,7 +29,7 @@ const postNewFolder = [
       return res.status(422).render("index", {
         title: "Dashboard",
         errors: errors.array(),
-        openDialog: true,
+        openDialog: "createFolder",
         files,
         folders,
       });
