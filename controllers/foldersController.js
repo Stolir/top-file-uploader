@@ -3,8 +3,10 @@ const {
   createNewFolder,
   findFoldersByUserId,
   deleteFolderById,
+  findUniqueFolder,
 } = require("../services/folderServices");
 const { findFilesByUserId } = require("../services/fileServices");
+const { getUniqueFileName } = require("../lib/utils");
 
 const validateFolderName = [
   body("name")
@@ -16,8 +18,6 @@ const validateFolderName = [
     .matches(/^[^<>:"/\\|?*\x00-\x1F]+$/)
     .withMessage("Folder name contains invalid characters"),
 ];
-
-function getUserFolders(req, res) {}
 
 const postNewFolder = [
   validateFolderName,
@@ -34,9 +34,30 @@ const postNewFolder = [
         folders,
       });
     }
-    const data = matchedData(req);
-    await createNewFolder(req.user.id, data.name);
-    res.redirect("/");
+    try {
+      let parentId = null;
+      const userId = req.user.id;
+      if (req.params.folderId) {
+        parentId = req.params.folderId;
+      }
+
+      const data = matchedData(req);
+      const folderName = await getUniqueFileName(
+        userId,
+        data.name,
+        parentId,
+        findUniqueFolder,
+      );
+      await createNewFolder(userId, folderName, parentId);
+      res.redirect("/");
+    } catch (error) {
+      console.error(error);
+      return res.render("status", {
+        title: "An error occurred!",
+        status: { code: error.html_code, msg: error.message },
+        redirect: { path: "/", msg: "Go to home page" },
+      });
+    }
   },
 ];
 
@@ -55,7 +76,6 @@ const deleteFolder = async (req, res, next) => {
 };
 
 module.exports = {
-  getUserFolders,
   postNewFolder,
   deleteFolder,
 };

@@ -9,6 +9,7 @@ const fileFilter = (req, file, cb) => {
     "image/png",
     "image/webp",
     "image/gif",
+    "image/svg+xml",
     "text/plain",
     "application/pdf",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -24,7 +25,7 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 15 * 1024 * 1024, // 15MB
+    fileSize: 20 * 1024 * 1024, // 15MB
   },
 });
 

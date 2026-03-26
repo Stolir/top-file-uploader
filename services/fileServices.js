@@ -17,4 +17,30 @@ const findFilesByUserId = async (userId, folderId = null) => {
   });
 };
 
-module.exports = { findFileById, findFilesByUserId };
+const findUniqueFile = async (userId, fileName, folderId) => {
+  return await prisma.file.findFirst({
+    where: {
+      userId,
+      name: fileName,
+      folderId,
+    },
+  });
+};
+
+const createNewFile = async (fileData) => {
+  return await prisma.file.create({
+    data: fileData,
+  });
+};
+
+const deleteFileById = async (fileId) => {
+  return await prisma.file.delete({ where: { id: fileId } });
+};
+
+module.exports = {
+  findFileById,
+  findFilesByUserId,
+  createNewFile,
+  deleteFileById,
+  findUniqueFile,
+};

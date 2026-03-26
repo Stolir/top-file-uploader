@@ -23,6 +23,7 @@ const signupRouter = require("./routes/signupRouter");
 const loginRouter = require("./routes/loginRouter");
 const logoutRouter = require("./routes/logoutRouter");
 const foldersRouter = require("./routes/foldersRouter");
+const fileRouter = require("./routes/fileRouter");
 
 // Define app related
 const app = express();
@@ -83,6 +84,7 @@ app.use("/signup", signupRouter);
 app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
 app.use("/folders", foldersRouter);
+app.use("/files", fileRouter);
 
 // Run app
 app.listen(PORT, (err) => {

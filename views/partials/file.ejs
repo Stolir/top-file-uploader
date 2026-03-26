@@ -1,6 +1,7 @@
-<button type="button" class="file">
-  <div>
-    <img src="/icons/file.svg" alt="file" />
-    <p><%= file.name %></p>
-  </div>
+<button type="button" class="file" data-id="<%= file.id %>">
+  <img
+    src="<%= file.mimeType.startsWith('image/') ? file.url : '/icons/file.svg' %>"
+    alt="file"
+  />
+  <p><%= file.name %></p>
 </button>

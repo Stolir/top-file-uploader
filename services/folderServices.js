@@ -19,7 +19,18 @@ const findFoldersByUserId = async (userId, parentId = null) => {
   });
 };
 
-const createNewFolder = async (userId, folderName, parentId = null) => {
+// using fields in the @@unqiue restraint
+const findUniqueFolder = async (userId, folderName, parentId) => {
+  return await prisma.folder.findFirst({
+    where: {
+      userId,
+      name: folderName,
+      parentId,
+    },
+  });
+};
+
+const createNewFolder = async (userId, folderName, parentId) => {
   try {
     return await prisma.folder.create({
       data: {
@@ -52,6 +63,7 @@ const deleteFolderById = async (folderId) => {
 module.exports = {
   findFolderById,
   findFoldersByUserId,
+  findUniqueFolder,
   createNewFolder,
   deleteFolderById,
 };

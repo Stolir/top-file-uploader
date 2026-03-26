@@ -88,8 +88,8 @@ closeCreateFileBtn.addEventListener("click", () => {
   createFile.close();
 });
 
-// Folder context menu functionality
-// Delete
+// Context menu functionality
+// Delete Folder
 const folderDeleteBtn = folderMenu.querySelector(".delete");
 
 folderDeleteBtn.addEventListener("click", async () => {
@@ -112,6 +112,38 @@ folderDeleteBtn.addEventListener("click", async () => {
   }
 });
 
+// Delete File
+const fileDeleteBtn = fileMenu.querySelector(".delete");
+
+fileDeleteBtn.addEventListener("click", async () => {
+  if (!selectedFile) {
+    return;
+  }
+
+  const fileId = selectedFile.dataset.id;
+  const parent = selectedFile.parentNode; // keep parent reference
+  const nextSibling = selectedFile.nextSibling; // keep next sibling to restore in original position
+  try {
+    selectedFile.remove();
+    const res = await fetch(`/files/${fileId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) {
+      throw new Error(`Delete failed: ${res.status}`);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Failed to delete file" + " " + error.message);
+    if (nextSibling) {
+      parent.insertBefore(selectedFile, nextSibling);
+    } else {
+      parent.appendChild(selectedFile);
+    }
+  }
+});
+
+// Scroll asset name on hover for long names
 document.querySelectorAll(".folder p, .file p").forEach((el) => {
   let frame;
 
