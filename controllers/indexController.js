@@ -10,6 +10,7 @@ const getHomePage = async (req, res) => {
       title: "Dashboard",
       files,
       folders,
+      currentFolder: null,
     });
   }
   res.render("index", { title: "Home" });

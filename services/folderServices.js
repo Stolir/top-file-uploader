@@ -60,10 +60,22 @@ const deleteFolderById = async (folderId) => {
   }
 };
 
+const findFolderContents = async (folderId) => {
+  try {
+    return await prisma.folder.findUnique({
+      where: { id: folderId },
+      include: { children: true, files: true },
+    });
+  } catch (error) {
+    console.error("Error getting folder", error);
+  }
+};
+
 module.exports = {
   findFolderById,
   findFoldersByUserId,
   findUniqueFolder,
   createNewFolder,
   deleteFolderById,
+  findFolderContents,
 };

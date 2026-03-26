@@ -24,6 +24,7 @@ const loginRouter = require("./routes/loginRouter");
 const logoutRouter = require("./routes/logoutRouter");
 const foldersRouter = require("./routes/foldersRouter");
 const fileRouter = require("./routes/fileRouter");
+const { isLoggedIn } = require("./middleware/authMiddleware");
 
 // Define app related
 const app = express();
@@ -67,14 +68,21 @@ app.use((req, res, next) => {
 });
 
 // development only
-// app.use(async (req, res, next) => {
-//   console.log(req.session);
-//   console.log(await req.user);
-//   next();
-// });
+app.use((req, res, next) => {
+  console.log(req.session);
+  console.log(req.user);
+  next();
+});
 
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
+  next();
+});
+
+app.use((req, res, next) => {
+  res.locals.currentFolder = req.params.folderId
+    ? Number(req.params.folderId)
+    : null;
   next();
 });
 
@@ -82,9 +90,9 @@ app.use((req, res, next) => {
 app.use("/", indexRouter);
 app.use("/signup", signupRouter);
 app.use("/login", loginRouter);
-app.use("/logout", logoutRouter);
-app.use("/folders", foldersRouter);
-app.use("/files", fileRouter);
+app.use("/logout", isLoggedIn, logoutRouter);
+app.use("/folders", isLoggedIn, foldersRouter);
+app.use("/files", isLoggedIn, fileRouter);
 
 // Run app
 app.listen(PORT, (err) => {

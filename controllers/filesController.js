@@ -21,11 +21,10 @@ async function postNewFile(req, res, next) {
     }
 
     if (req.params.folderId) {
-      folderId = req.params.folderId;
+      folderId = Number(req.params.folderId);
     }
 
     const userId = req.user.id;
-    console.log(req.file);
     const fileName = await getUniqueFileName(
       userId,
       req.file.originalname,
@@ -34,7 +33,7 @@ async function postNewFile(req, res, next) {
     );
 
     const result = await uploadToCloudinary(req.file.buffer, "user_uploads");
-    console.log(result);
+    console.log(folderId);
     await createNewFile({
       name: fileName,
       url: result.secure_url,
@@ -46,7 +45,7 @@ async function postNewFile(req, res, next) {
     });
 
     if (folderId) {
-      return res.redirect(`/folder/${folderId}`);
+      return res.redirect(`/folders/${folderId}`);
     }
 
     return res.redirect("/");
