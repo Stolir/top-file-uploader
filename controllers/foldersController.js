@@ -2,6 +2,7 @@ const { body, validationResult, matchedData } = require("express-validator");
 const {
   createNewFolder,
   findFoldersByUserId,
+  deleteFolderById,
 } = require("../services/folderServices");
 const { findFilesByUserId } = require("../services/fileServices");
 
@@ -35,12 +36,26 @@ const postNewFolder = [
     }
     const data = matchedData(req);
     await createNewFolder(req.user.id, data.name);
-    console.log(`Created folder ${data.name}`);
     res.redirect("/");
   },
 ];
 
+const deleteFolder = async (req, res, next) => {
+  const { folderId } = req.params;
+  try {
+    if (folderId) {
+      await deleteFolderById(Number(folderId));
+      return res.sendStatus(204);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+
+  next();
+};
+
 module.exports = {
   getUserFolders,
   postNewFolder,
+  deleteFolder,
 };

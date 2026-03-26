@@ -1,6 +1,12 @@
+const dashboard = document.getElementById("dashboard");
+
 const fileMenu = document.getElementById("fileMenu");
 const folderMenu = document.getElementById("folderMenu");
 const dashboardMenu = document.getElementById("dashboardMenu");
+
+// store elements to be modified by menus
+let selectedFolder;
+let selectedFile;
 
 document.addEventListener("contextmenu", function (e) {
   e.preventDefault(); // stop default menu
@@ -22,9 +28,11 @@ document.addEventListener("contextmenu", function (e) {
   if (e.target.closest(".file")) {
     // Right-click on a file
     menuToShow = fileMenu;
+    selectedFile = e.target.closest(".file");
   } else if (e.target.closest(".folder")) {
     // Right-click on a folder
     menuToShow = folderMenu;
+    selectedFolder = e.target.closest(".folder");
   } else {
     // Right-click in empty dashboard space
     menuToShow = dashboardMenu;
@@ -63,4 +71,57 @@ openCreateFolderBtn.addEventListener("click", () => {
 
 closeCreateFolderBtn.addEventListener("click", () => {
   createFolder.close();
+});
+
+// Folder context menu functionality
+// Delete
+const folderDeleteBtn = folderMenu.querySelector(".delete");
+console.log(folderDeleteBtn);
+
+folderDeleteBtn.addEventListener("click", async () => {
+  console.log(selectedFolder);
+  if (!selectedFolder) {
+    return;
+  }
+  const folderId = selectedFolder.dataset.id;
+  try {
+    const res = await fetch(`/folders/${folderId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) {
+      throw new Error(`Delete failed: ${res.status}`);
+    }
+    selectedFolder.remove();
+  } catch (error) {
+    console.error(error);
+    alert("Failed to delete folder:" + " " + error.message);
+  }
+});
+
+document.querySelectorAll(".folder p, .file p").forEach((el) => {
+  let frame;
+
+  el.addEventListener("mouseenter", () => {
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    if (maxScroll <= 0) return;
+
+    let pos = 0;
+
+    const step = () => {
+      pos += 0.25;
+      el.scrollLeft = pos;
+
+      if (pos < maxScroll) {
+        frame = requestAnimationFrame(step);
+      }
+    };
+
+    step();
+  });
+
+  el.addEventListener("mouseleave", () => {
+    cancelAnimationFrame(frame);
+    el.scrollLeft = 0;
+  });
 });

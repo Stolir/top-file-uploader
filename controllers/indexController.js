@@ -6,7 +6,6 @@ const getHomePage = async (req, res) => {
   if (userIsLoggedIn(req)) {
     const folders = await findFoldersByUserId(req.user.id);
     const files = await findFilesByUserId(req.user.id);
-    console.log(folders);
     return res.render("index", {
       title: "Dashboard",
       files,

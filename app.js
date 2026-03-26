@@ -66,11 +66,11 @@ app.use((req, res, next) => {
 });
 
 // development only
-app.use(async (req, res, next) => {
-  console.log(req.session);
-  console.log(await req.user);
-  next();
-});
+// app.use(async (req, res, next) => {
+//   console.log(req.session);
+//   console.log(await req.user);
+//   next();
+// });
 
 app.use((req, res, next) => {
   res.locals.user = req.user || null;

@@ -1,5 +1,13 @@
 const { prisma } = require("../lib/prisma");
 
+const findFileById = async (fileId) => {
+  return await prisma.file.findUnique({
+    where: {
+      id: fileId,
+    },
+  });
+};
+
 const findFilesByUserId = async (userId, folderId = null) => {
   return await prisma.file.findMany({
     where: {
@@ -9,4 +17,4 @@ const findFilesByUserId = async (userId, folderId = null) => {
   });
 };
 
-module.exports = { findFilesByUserId };
+module.exports = { findFileById, findFilesByUserId };
