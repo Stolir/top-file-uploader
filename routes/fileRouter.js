@@ -4,11 +4,13 @@ const {
   postNewFile,
   deleteFile,
   renameFile,
+  getFilePage,
 } = require("../controllers/filesController");
 const { isOwner } = require("../middleware/authMiddleware");
 
 const fileRouter = Router();
 
+fileRouter.get("/:fileId", isOwner, getFilePage);
 fileRouter.post("{/:folderId}", upload.single("file"), postNewFile);
 fileRouter.delete("/:fileId", isOwner, deleteFile);
 fileRouter.patch("/:fileId", isOwner, renameFile);

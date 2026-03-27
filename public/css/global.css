@@ -198,7 +198,8 @@ form div {
   flex-direction: column;
 }
 
-form button {
+form button,
+.file-view button {
   background-color: var(--color-accent);
   padding: 0.3rem 1rem;
   color: white;
@@ -278,13 +279,17 @@ main {
   list-style: none;
 }
 
-.contextMenu button {
+.contextMenu button,
+.contextMenu a {
   background: none;
   border: none;
   width: 100%;
   height: 100%;
   border: none;
   cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: block;
 }
 
 /* ------- CONTEXT MENU -------- */
@@ -372,3 +377,29 @@ dialog input {
 }
 
 /* ---------- STATUS ----------- */
+
+/* --------- VIEW FILE --------- */
+
+.file-view {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  height: 70%;
+}
+
+.file-view p {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.file-view p span {
+  font-weight: lighter;
+}
+
+.file-view_info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* --------- VIEW FILE --------- */

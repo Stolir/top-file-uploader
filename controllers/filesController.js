@@ -1,7 +1,12 @@
 const { validationResult, matchedData, body } = require("express-validator");
 const cloudinary = require("../config/cloudinary");
 const uploadToCloudinary = require("../lib/uploadToCloudinary");
-const { getUniqueFileName } = require("../lib/utils");
+const {
+  getUniqueFileName,
+  convertDate,
+  formatDate,
+  formatSize,
+} = require("../lib/utils");
 const {
   createNewFile,
   findFileById,
@@ -151,4 +156,39 @@ const renameFile = [
   },
 ];
 
-module.exports = { postNewFile, deleteFile, renameFile };
+async function getFilePage(req, res, next) {
+  const fileId = Number(req.params.fileId);
+  try {
+    const file = await findFileById(fileId);
+    if (!file) {
+      return res.render("status", {
+        title: "An error occurred!",
+        status: {
+          code: 404,
+          msg: "File not found.",
+        },
+        redirect: { path: "/", msg: "Go to home page" },
+      });
+    }
+    const formattedDate = formatDate(file.createdAt);
+    const formattedSize = formatSize(file.size);
+    return res.render("viewFile", {
+      title: file.name,
+      file,
+      formattedDate,
+      formattedSize,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.render("status", {
+      title: "An error occurred!",
+      status: {
+        code: error.http_code,
+        msg: error.message,
+      },
+      redirect: { path: "/", msg: "Go to home page" },
+    });
+  }
+}
+
+module.exports = { postNewFile, deleteFile, renameFile, getFilePage };

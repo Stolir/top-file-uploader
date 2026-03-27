@@ -1,4 +1,4 @@
-<a type="button" class="file" data-id="<%= file.id %>">
+<a href="/files/<%= file.id %>" class="file" data-id="<%= file.id %>">
   <img
     src="<%= file.mimeType.startsWith('image/') ? file.url : '/icons/file.svg' %>"
     alt="file"

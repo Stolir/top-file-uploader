@@ -274,3 +274,48 @@ async function renameItem(newName, id, type, ext) {
     return false;
   }
 }
+
+// handle file downloads
+const menuDownloadBtn = fileMenu.querySelector(".download");
+
+menuDownloadBtn.addEventListener("click", async () => {
+  if (!selectedFile) {
+    return;
+  }
+  const fileUrl = selectedFile.querySelector("img").src;
+  const fileName = selectedFile.querySelector("input").value;
+
+  await downloadFile(fileUrl, fileName);
+});
+
+const fileViewDownloadBtn = document.querySelector(".file-view_downloadFile");
+
+fileViewDownloadBtn.addEventListener("click", async () => {
+  const { url, name } = fileViewDownloadBtn.dataset;
+  await downloadFile(url, name);
+});
+
+async function downloadFile(fileUrl, fileName) {
+  try {
+    const res = await fetch(fileUrl);
+
+    if (!res.ok) {
+      throw new Error(`Download failed: ${res.status}`);
+    }
+
+    const blob = await res.blob();
+    const objectUrl = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(objectUrl);
+  } catch (error) {
+    console.error(error);
+    alert("Failed to download file: " + error.message);
+  }
+}

@@ -1,0 +1,19 @@
+<section class="file-view">
+  <img
+    src="<%= file.mimeType.startsWith('image/') ? file.url : '/icons/file.svg' %>"
+    alt="file view"
+  />
+  <section class="file-view_info">
+    <p>File name:<span> <%= file.name %></span></p>
+    <p>File size: <span><%= formattedSize %></span></p>
+    <p>Date created: <span><%= formattedDate %></span></p>
+    <button
+      type="button"
+      class="file-view_downloadFile"
+      data-name="<%= file.name %>"
+      data-url="<%= file.url %>"
+    >
+      Download
+    </button>
+  </section>
+</section>
