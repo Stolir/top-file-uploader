@@ -338,14 +338,17 @@ dialog input {
   border-radius: 10px;
 }
 
-.folder p,
-.file p {
+.folder .folder-name,
+.file .file-name {
   width: 100%;
   min-height: max-content;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
   text-align: center;
+  background: none;
+  border: none;
+  outline: none;
 }
 
 .folder img,
@@ -360,3 +363,12 @@ dialog input {
   background-color: rgba(0, 0, 0, 0.075);
 }
 /* ---------- FILES ------------ */
+/* ---------- STATUS ----------- */
+.status-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ---------- STATUS ----------- */

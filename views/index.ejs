@@ -1,5 +1,5 @@
 <% if (user) { %>
-    <section id="dashboard">
+    <section id="dashboard" data-current-folder-id="<%= currentFolder ?? "" %>">
       <% if (files.length <= 0 && folders.length <= 0) { %>
        You do not have any folders. Right-click to create your first!
       <% } %>

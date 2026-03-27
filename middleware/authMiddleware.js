@@ -44,7 +44,7 @@ module.exports.isOwner = async (req, res, next) => {
       title: "Not authorized",
       status: {
         code: 403,
-        msg: "You do not permission to perform this action",
+        msg: "You do not have permission to view this resource",
       },
       redirect: {
         path: "/",

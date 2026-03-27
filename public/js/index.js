@@ -112,6 +112,20 @@ folderDeleteBtn.addEventListener("click", async () => {
   }
 });
 
+// Rename File or Folder
+const renameButtons = document.querySelectorAll(".contextMenu .rename");
+
+renameButtons.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    const selected = selectedFile || selectedFolder;
+    console.log(selected);
+    const input = selected.querySelector("input");
+
+    console.log(input);
+    startRename(input);
+  });
+});
+
 // Delete File
 const fileDeleteBtn = fileMenu.querySelector(".delete");
 
@@ -143,8 +157,10 @@ fileDeleteBtn.addEventListener("click", async () => {
   }
 });
 
+const fileNameInputs = document.querySelectorAll(".folder input, .file input");
+
 // Scroll asset name on hover for long names
-document.querySelectorAll(".folder p, .file p").forEach((el) => {
+fileNameInputs.forEach((el) => {
   let frame;
 
   el.addEventListener("mouseenter", () => {
@@ -170,3 +186,91 @@ document.querySelectorAll(".folder p, .file p").forEach((el) => {
     el.scrollLeft = 0;
   });
 });
+
+fileNameInputs.forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  });
+
+  el.addEventListener("dblclick", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    startRename(el);
+  });
+});
+
+function startRename(input) {
+  const originalName = input.value;
+  const lastDot = originalName.lastIndexOf(".");
+  const ext = lastDot !== -1 ? originalName.slice(lastDot) : "";
+  input.removeAttribute("readonly");
+  input.classList.add("renaming");
+  input.focus();
+  input.select();
+
+  input._keydownHandler = (e) => onKeydown(e, input, originalName, ext);
+  input._blurHandler = () => onBlur(input, originalName);
+
+  input.addEventListener("keydown", input._keydownHandler);
+  input.addEventListener("blur", input._blurHandler);
+}
+
+function onKeydown(e, input, originalName = null, ext) {
+  if (e.key === "Enter") {
+    e.target.removeEventListener("blur", input._blurHandler);
+    finishRename(input, originalName, ext);
+  }
+  if (e.key === "Escape") {
+    e.target.removeEventListener("blur", input._blurHandler);
+    cancelRename(input, originalName);
+  }
+}
+
+function onBlur(input, originalName) {
+  cancelRename(input, originalName);
+}
+
+function cancelRename(input, originalName) {
+  input.setAttribute("readonly", true);
+  input.classList.remove("renaming");
+  input.value = originalName;
+  input.removeEventListener("keydown", input._keydownHandler);
+  input.removeEventListener("blur", input._blurHandler);
+}
+
+async function finishRename(input, originalName, ext) {
+  const newName = input.value.trim();
+  const { id, type } = input.dataset;
+  input.setAttribute("readonly", true);
+  input.classList.remove("renaming");
+  const result = await renameItem(newName, id, type, ext);
+  if (!result.success) {
+    input.value = originalName;
+  }
+  input.value = type === "folder" ? result.folder.name : result.file.name;
+}
+
+async function renameItem(newName, id, type, ext) {
+  const endPoint = type === "folder" ? `/folders/${id}` : `/files/${id}`;
+  try {
+    const res = await fetch(endPoint, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: newName + ext,
+        currentFolder: dashboard.dataset.currentFolderId ?? null,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Rename failed: ${res.status}`);
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(error);
+    alert(error);
+    return false;
+  }
+}

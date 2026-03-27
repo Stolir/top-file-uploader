@@ -5,7 +5,7 @@
 
 <dialog id="createFolder" <%= openDialog === 'createFolder' ? "open" : '' %>>
   <form action="<%= currentFolder ? `/folders/${currentFolder}` : '/folders' %>" method="post">
-    <% errors.forEach(error => { %>
+    <% newFolderErrors.forEach(error => { %>
      <span class="error"><%= error.msg %></span>
     <% }) %>
     <input

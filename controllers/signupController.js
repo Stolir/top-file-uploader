@@ -64,7 +64,7 @@ const validateUser = [
 ];
 
 const getSignupPage = (req, res) => {
-  res.render("signup", { title: "Sign Up", data: {}, errors: {} });
+  res.render("signup", { title: "Sign Up", data: {}, errors: [] });
 };
 
 const postSignupRequest = [

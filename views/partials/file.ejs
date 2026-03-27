@@ -3,5 +3,12 @@
     src="<%= file.mimeType.startsWith('image/') ? file.url : '/icons/file.svg' %>"
     alt="file"
   />
-  <p><%= file.name %></p>
+  <input
+    type="text"
+    class="file-name"
+    value="<%= file.name %>"
+    data-id="<%= file.id %>"
+    data-type="file"
+    readonly
+  />
 </a>

@@ -1,4 +1,11 @@
 <a href="/folders/<%= folder.id %>" class="folder" data-id="<%= folder.id %>">
   <img src="/icons/folder.svg" alt="folder" />
-  <p><%= folder.name %></p>
+  <input
+    type="text"
+    class="folder-name"
+    value="<%= folder.name %>"
+    data-id="<%= folder.id %>"
+    data-type="folder"
+    readonly
+  />
 </a>

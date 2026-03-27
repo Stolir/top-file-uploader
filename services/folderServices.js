@@ -71,6 +71,17 @@ const findFolderContents = async (folderId) => {
   }
 };
 
+const renameFolderById = async (folderId, newName) => {
+  return await prisma.folder.update({
+    where: {
+      id: folderId,
+    },
+    data: {
+      name: newName,
+    },
+  });
+};
+
 module.exports = {
   findFolderById,
   findFoldersByUserId,
@@ -78,4 +89,5 @@ module.exports = {
   createNewFolder,
   deleteFolderById,
   findFolderContents,
+  renameFolderById,
 };

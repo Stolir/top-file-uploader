@@ -1,3 +1,4 @@
+const { validationResult, matchedData, body } = require("express-validator");
 const cloudinary = require("../config/cloudinary");
 const uploadToCloudinary = require("../lib/uploadToCloudinary");
 const { getUniqueFileName } = require("../lib/utils");
@@ -6,7 +7,20 @@ const {
   findFileById,
   deleteFileById,
   findUniqueFile,
+  renameFileById,
 } = require("../services/fileServices");
+
+// only used when renaming
+const validateFileName = [
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("File name is required")
+    .isLength({ min: 1, max: 100 })
+    .withMessage("File name must be between 1 and 100 characters")
+    .matches(/^[^<>:"/\\|?*\x00-\x1F]+$/)
+    .withMessage("File name contains invalid characters"),
+];
 
 async function postNewFile(req, res, next) {
   try {
@@ -33,7 +47,6 @@ async function postNewFile(req, res, next) {
     );
 
     const result = await uploadToCloudinary(req.file.buffer, "user_uploads");
-    console.log(folderId);
     await createNewFile({
       name: fileName,
       url: result.secure_url,
@@ -99,4 +112,43 @@ async function deleteFile(req, res, next) {
   }
 }
 
-module.exports = { postNewFile, deleteFile };
+const renameFile = [
+  validateFileName,
+  async (req, res, next) => {
+    const renameFileErrors = validationResult(req);
+    if (!renameFileErrors.isEmpty()) {
+      return res.status(400).json({ errors: renameFileErrors.array() });
+    }
+    try {
+      let currentFolder = null;
+      const userId = req.user.id;
+
+      const fileId = Number(req.params.fileId);
+      const { name } = matchedData(req);
+      if (req.body.currentFolder) {
+        currentFolder = Number(req.body.currentFolder);
+      }
+      const validName = await getUniqueFileName(
+        userId,
+        name,
+        currentFolder,
+        findUniqueFile,
+        fileId,
+      );
+      const file = await renameFileById(fileId, validName);
+      return res.json({ success: true, file });
+    } catch (error) {
+      console.error(error);
+      return res.render("status", {
+        title: "An error occurred!",
+        status: {
+          code: error.http_code,
+          msg: error.message,
+        },
+        redirect: { path: "/", msg: "Go to home page" },
+      });
+    }
+  },
+];
+
+module.exports = { postNewFile, deleteFile, renameFile };

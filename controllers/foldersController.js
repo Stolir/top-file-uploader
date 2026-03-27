@@ -5,6 +5,7 @@ const {
   deleteFolderById,
   findUniqueFolder,
   findFolderContents,
+  renameFolderById,
 } = require("../services/folderServices");
 const { findFilesByUserId } = require("../services/fileServices");
 const { getUniqueFileName } = require("../lib/utils");
@@ -23,13 +24,13 @@ const validateFolderName = [
 const postNewFolder = [
   validateFolderName,
   async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    const newFolderErrors = validationResult(req);
+    if (!newFolderErrors.isEmpty()) {
       const folders = await findFoldersByUserId(req.user.id);
       const files = await findFilesByUserId(req.user.id);
       return res.status(422).render("index", {
         title: "Dashboard",
-        errors: errors.array(),
+        newFolderErrors: newFolderErrors.array(),
         openDialog: "createFolder",
         files,
         folders,
@@ -38,7 +39,6 @@ const postNewFolder = [
     try {
       let folderId = null;
       const userId = req.user.id;
-      console.log(folderId);
       if (req.params.folderId) {
         folderId = Number(req.params.folderId);
       }
@@ -107,8 +107,47 @@ const getFolderContents = async (req, res, next) => {
   }
 };
 
+const renameFolder = [
+  validateFolderName,
+  async (req, res, next) => {
+    const renameFolderErrors = validationResult(req);
+    if (!renameFolderErrors.isEmpty()) {
+      return res.status(400).json({ errors: renameFolderErrors.array() });
+    }
+    try {
+      const userId = req.user.id;
+      let currentFolder = null;
+      const folderId = Number(req.params.folderId);
+      const { name } = matchedData(req);
+      if (req.body.currentFolder) {
+        currentFolder = Number(req.body.currentFolder);
+      }
+      const validName = await getUniqueFileName(
+        userId,
+        name,
+        currentFolder ?? null,
+        findUniqueFolder,
+        folderId,
+      );
+      const folder = await renameFolderById(folderId, validName);
+      return res.json({ success: true, folder });
+    } catch (error) {
+      console.error(error);
+      return res.render("status", {
+        title: "An error occurred!",
+        status: {
+          code: error.http_code,
+          msg: error.message,
+        },
+        redirect: { path: "/", msg: "Go to home page" },
+      });
+    }
+  },
+];
+
 module.exports = {
   postNewFolder,
   deleteFolder,
   getFolderContents,
+  renameFolder,
 };

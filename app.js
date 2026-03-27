@@ -36,6 +36,7 @@ app.set("view engine", "ejs");
 app.use(expressLayouts);
 
 // Use middleware
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -62,17 +63,17 @@ app.use(passport.session());
 
 // set variables used in layout so they are never undefined
 app.use((req, res, next) => {
-  res.locals.errors = [];
+  res.locals.newFolderErrors = [];
   res.locals.openDialog = false;
   next();
 });
 
 // development only
-app.use((req, res, next) => {
-  console.log(req.session);
-  console.log(req.user);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(req.session);
+//   console.log(req.user);
+//   next();
+// });
 
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
@@ -90,10 +91,17 @@ app.use((req, res, next) => {
 app.use("/", indexRouter);
 app.use("/signup", signupRouter);
 app.use("/login", loginRouter);
-app.use("/logout", isLoggedIn, logoutRouter);
+app.use("/logout", logoutRouter);
 app.use("/folders", isLoggedIn, foldersRouter);
 app.use("/files", isLoggedIn, fileRouter);
-
+// catch all route for 404
+app.use((req, res) => {
+  return res.status(404).render("status", {
+    title: "An error occurred!",
+    status: { code: 404, msg: "Page not found." },
+    redirect: { path: "/", msg: "Go to home page" },
+  });
+});
 // Run app
 app.listen(PORT, (err) => {
   if (err) {
