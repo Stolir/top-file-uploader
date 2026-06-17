@@ -88,6 +88,7 @@ app.use((req, res, next) => {
 });
 
 // Use routes
+app.get("/health", (req, res) => res.sendStatus(204));
 app.use("/", indexRouter);
 app.use("/signup", signupRouter);
 app.use("/login", loginRouter);
